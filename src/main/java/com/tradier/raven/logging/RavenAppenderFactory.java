@@ -2,6 +2,8 @@ package com.tradier.raven.logging;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.getsentry.raven.logback.SentryAppender;
 import io.dropwizard.logging.AbstractAppenderFactory;
 
@@ -14,9 +16,6 @@ import ch.qos.logback.core.spi.FilterReply;
 import io.dropwizard.logging.async.AsyncAppenderFactory;
 import io.dropwizard.logging.filter.LevelFilterFactory;
 import io.dropwizard.logging.layout.LayoutFactory;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeName;
 
 
 
