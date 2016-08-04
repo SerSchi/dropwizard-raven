@@ -5,7 +5,6 @@ import io.dropwizard.logging.AbstractAppenderFactory;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Appender;
-import ch.qos.logback.core.Layout;
 import ch.qos.logback.core.filter.Filter;
 import ch.qos.logback.core.spi.FilterReply;
 import io.dropwizard.logging.async.AsyncAppenderFactory;
