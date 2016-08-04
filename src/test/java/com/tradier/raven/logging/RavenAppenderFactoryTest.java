@@ -13,6 +13,9 @@ import ch.qos.logback.classic.AsyncAppender;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Appender;
+import io.dropwizard.logging.async.AsyncLoggingEventAppenderFactory;
+import io.dropwizard.logging.filter.ThresholdLevelFilterFactory;
+import io.dropwizard.logging.layout.DropwizardLayoutFactory;
 
 public class RavenAppenderFactoryTest {
 
@@ -26,7 +29,7 @@ public class RavenAppenderFactoryTest {
 	
     @Test(expected = NullPointerException.class)
     public void buildRavenAppenderShouldFailWithNullContext() {
-        new RavenAppenderFactory().build(null, "", null);
+        new RavenAppenderFactory().build(null, "", null, null, null);
     }
 	
     @Test
@@ -34,7 +37,11 @@ public class RavenAppenderFactoryTest {
         final RavenAppenderFactory raven = new RavenAppenderFactory();
         final String dsn = "https://user:pass@app.getsentry.com/id";
 
-        Appender<ILoggingEvent> appender = raven.build(new LoggerContext(), dsn, null);
+        ThresholdLevelFilterFactory levelFilterFactory = new ThresholdLevelFilterFactory();
+        DropwizardLayoutFactory layoutFactory = new DropwizardLayoutFactory();
+        AsyncLoggingEventAppenderFactory asyncAppenderFactory = new AsyncLoggingEventAppenderFactory();
+        Appender<ILoggingEvent> appender = raven.build(
+                new LoggerContext(), dsn, layoutFactory, levelFilterFactory, asyncAppenderFactory);
 
         assertThat(appender, instanceOf(AsyncAppender.class));
     }
