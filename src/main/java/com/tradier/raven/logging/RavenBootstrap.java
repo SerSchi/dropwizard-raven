@@ -6,6 +6,11 @@ import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
+import io.dropwizard.logging.DropwizardLayout;
+import io.dropwizard.logging.async.AsyncLoggingEventAppenderFactory;
+import io.dropwizard.logging.filter.ThresholdLevelFilterFactory;
+import io.dropwizard.logging.layout.DropwizardLayoutFactory;
+import java.util.TimeZone;
 
 /**
  * A class adding a configured {@link com.getsentry.raven.logback.SentryAppender} to the root logger.
@@ -48,11 +53,11 @@ public final class RavenBootstrap {
      * @param release         The release name to pass to Sentry
      */
     public static void bootstrap(
-        final String dsn,
-        Optional<String> tags,
-        boolean cleanRootLogger,
-        String environment,
-        String release
+            final String dsn,
+            Optional<String> tags,
+            boolean cleanRootLogger,
+            String environment,
+            String release
     ) {
         final RavenAppenderFactory raven = new RavenAppenderFactory();
         raven.setThreshold(Level.ERROR);
@@ -65,16 +70,18 @@ public final class RavenBootstrap {
     }
 
     private static void registerAppender(
-        String dsn,
-        boolean cleanRootLogger,
-        RavenAppenderFactory raven
+            String dsn,
+            boolean cleanRootLogger,
+            RavenAppenderFactory raven
     ) {
         final Logger root = (Logger) LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
 
         if (cleanRootLogger) {
             root.detachAndStopAllAppenders();
         }
-
-        root.addAppender(raven.build(root.getLoggerContext(), dsn, null));
+        ThresholdLevelFilterFactory levelFilterFactory = new ThresholdLevelFilterFactory();
+        DropwizardLayoutFactory layoutFactory = new DropwizardLayoutFactory();
+        AsyncLoggingEventAppenderFactory asyncAppenderFactory = new AsyncLoggingEventAppenderFactory();
+        root.addAppender(raven.build(root.getLoggerContext(), dsn, layoutFactory, levelFilterFactory, asyncAppenderFactory));
     }
 }
