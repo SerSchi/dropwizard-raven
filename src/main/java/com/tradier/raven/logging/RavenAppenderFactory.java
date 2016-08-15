@@ -75,7 +75,7 @@ public class RavenAppenderFactory extends AbstractAppenderFactory {
 
         appender.start();
         appender.addFilter(levelFilterFactory.build(threshold));
-        Appender<ILoggingEvent> asyncAppender = wrapAsync(appender, asyncAppenderFactory, context);
+        final Appender<ILoggingEvent> asyncAppender = wrapAsync(appender, asyncAppenderFactory, context);
         addDroppingRavenLoggingFilter(asyncAppender);
 
         return asyncAppender;
