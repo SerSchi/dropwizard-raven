@@ -1,23 +1,19 @@
 package com.tradier.raven.logging;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.getsentry.raven.logback.SentryAppender;
 import io.dropwizard.logging.AbstractAppenderFactory;
-
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Appender;
-import ch.qos.logback.core.Layout;
 import ch.qos.logback.core.filter.Filter;
 import ch.qos.logback.core.spi.FilterReply;
 import io.dropwizard.logging.async.AsyncAppenderFactory;
 import io.dropwizard.logging.filter.LevelFilterFactory;
 import io.dropwizard.logging.layout.LayoutFactory;
 
-
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.getsentry.raven.logback.SentryAppender;
 
 @JsonTypeName("raven")
 public class RavenAppenderFactory extends AbstractAppenderFactory {
@@ -29,10 +25,10 @@ public class RavenAppenderFactory extends AbstractAppenderFactory {
     private String tags = null;
 
     @JsonProperty
-    private String release;
+    private String release = null;
 
     @JsonProperty
-    private String environment;
+    private String environment = null;
 
     public String getDsn() {
         return dsn;
@@ -56,12 +52,6 @@ public class RavenAppenderFactory extends AbstractAppenderFactory {
 
     public void setEnvironment(String environment) {
         this.environment = environment;
-    }
-
-    public void addDroppingRavenLoggingFilter(Appender<ILoggingEvent> appender) {
-        Filter<ILoggingEvent> filter = new DroppingRavenLoggingFilter();
-        filter.start();
-        appender.addFilter(filter);
     }
 
     @Override
@@ -89,6 +79,12 @@ public class RavenAppenderFactory extends AbstractAppenderFactory {
         addDroppingRavenLoggingFilter(asyncAppender);
 
         return asyncAppender;
+    }
+
+    public void addDroppingRavenLoggingFilter(Appender<ILoggingEvent> appender) {
+        final Filter<ILoggingEvent> filter = new DroppingRavenLoggingFilter();
+        filter.start();
+        appender.addFilter(filter);
     }
 
     public static class DroppingRavenLoggingFilter extends Filter<ILoggingEvent> {

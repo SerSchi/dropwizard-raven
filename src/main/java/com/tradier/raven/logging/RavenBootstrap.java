@@ -1,7 +1,5 @@
 package com.tradier.raven.logging;
 
-import com.google.common.base.Optional;
-
 import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.classic.Level;
@@ -12,16 +10,23 @@ import io.dropwizard.logging.filter.ThresholdLevelFilterFactory;
 import io.dropwizard.logging.layout.DropwizardLayoutFactory;
 import java.util.TimeZone;
 
+import com.google.common.base.Optional;
+import io.dropwizard.logging.async.AsyncLoggingEventAppenderFactory;
+import io.dropwizard.logging.filter.ThresholdLevelFilterFactory;
+import io.dropwizard.logging.layout.DropwizardLayoutFactory;
+
 /**
  * A class adding a configured {@link com.getsentry.raven.logback.SentryAppender} to the root logger.
  */
 public final class RavenBootstrap {
-    private RavenBootstrap() { /* No instance methods */ }
+
+    private RavenBootstrap() {
+        /* No instance methods */ }
 
     /**
      * Bootstrap the SLF4J root logger with a configured {@link com.getsentry.raven.logback.SentryAppender}.
      *
-     * @param dsn             The DSN (Data Source Name) for your project
+     * @param dsn The DSN (Data Source Name) for your project
      * @param cleanRootLogger If true, detach and stop all other appenders from the root logger
      */
     public static void bootstrap(final String dsn, boolean cleanRootLogger) {
@@ -31,8 +36,8 @@ public final class RavenBootstrap {
     /**
      * Bootstrap the SLF4J root logger with a configured {@link com.getsentry.raven.logback.SentryAppender}.
      *
-     * @param dsn             The DSN (Data Source Name) for your project
-     * @param tags            Custom tags to send to Sentry along with errors
+     * @param dsn The DSN (Data Source Name) for your project
+     * @param tags Custom tags to send to Sentry along with errors
      * @param cleanRootLogger If true, detach and stop all other appenders from the root logger
      */
     public static void bootstrap(final String dsn, Optional<String> tags, boolean cleanRootLogger) {
@@ -46,11 +51,12 @@ public final class RavenBootstrap {
 
     /**
      * Bootstrap the SLF4J root logger with a configured {@link com.getsentry.raven.logback.SentryAppender}.
-     *  @param dsn             The DSN (Data Source Name) for your project
-     * @param tags            Custom tags to send to Sentry along with errors
+     *
+     * @param dsn The DSN (Data Source Name) for your project
+     * @param tags Custom tags to send to Sentry along with errors
      * @param cleanRootLogger If true, detach and stop all other appenders from the root logger
-     * @param environment     The environment name to pass to Sentry
-     * @param release         The release name to pass to Sentry
+     * @param environment The environment name to pass to Sentry
+     * @param release The release name to pass to Sentry
      */
     public static void bootstrap(
             final String dsn,
@@ -65,10 +71,17 @@ public final class RavenBootstrap {
         raven.setTags(tags.get());
         raven.setEnvironment(environment);
         raven.setRelease(release);
-
-        registerAppender(dsn, cleanRootLogger, raven);
     }
 
+    /**
+     * Bootstrap the SLF4J root logger with a configured {@link com.getsentry.raven.logback.SentryAppender}.
+     *
+     * @param dsn The DSN (Data Source Name) for your project
+     * @param tags Custom tags to send to Sentry along with errors
+     * @param cleanRootLogger If true, detach and stop all other appenders from the root logger
+     * @param environment The environment name to pass to Sentry
+     * @param release The release name to pass to Sentry
+     */
     private static void registerAppender(
             String dsn,
             boolean cleanRootLogger,
